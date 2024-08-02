@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>proyecto</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Condensed', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: #000;
+            color: #fff;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: rgb(129, 41, 41);
+            height: 100vh;
+            border-right: 2px solid #fff;
+        }
+        .header {
+            background-color: rgb(129, 41, 41);
+            padding: 10px;
+            border-bottom: 2px solid #fff;
+            display: flex;
+            align-items: center;
+        }
+        .header img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        .header-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .menu-item {
+            padding: 10px;
+            border-bottom: 1px solid #f7f5f5;
+            cursor: pointer;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            color: #000;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: right;
+        }
+        th {
+            background-color: rgb(129, 41, 41);
+            color: #fff;
+        }
+        .chart {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="header">
+            <img src="img/logocdmi.jpg" alt="CDMI Logo">
+            <div class="header-text">
+                <strong class="text-light">CDMI</strong>
+                <span class="text-light">Administrador</span>
+                <a href="index.html" onclick="cerrarSesion()">cerrar sesión</a>
+            </div>
+        </div>
+        <div class="menu-item text-light">Ventas</div>
+        <div class="menu-item text-light">Productos</div>
+        <div class="menu-item text-light">Donaciones</div>
+        <div class="menu-item text-light">Eventos</div>
+    </div>
+    <div class="content">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Cuenta</th>
+                    <th>Debe</th>
+                    <th>Haber</th>
+                    <th>Saldo</th>
+                    <th>Porcentaje</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos se insertarán aquí con JavaScript -->
+            </tbody>
+        </table>
+        <div class="chart">
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const data = [
+            { fecha: '01/01/2023', cuenta: 'Ingreso anual', debe: 0, haber: 1994.64, saldo: 1994.64, porcentaje: 2.63 },
+            { fecha: '01/02/2023', cuenta: 'Donación', debe: 1912.00, haber: 0, saldo: 3907.43, porcentaje: 5.15 },
+            { fecha: '01/03/2023', cuenta: 'Venta', debe: 0, haber: 2500.00, saldo: 6407.43, porcentaje: 8.45 },
+            { fecha: '01/04/2023', cuenta: 'Gasto', debe: 1000.00, haber: 0, saldo: 5407.43, porcentaje: 7.13 },
+        ];
+
+        function populateTable() {
+            const tbody = document.querySelector('#dataTable tbody');
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.fecha}</td>
+                    <td>${row.cuenta}</td>
+                    <td>${row.debe.toFixed(2)}</td>
+                    <td>${row.haber.toFixed(2)}</td>
+                    <td>${row.saldo.toFixed(2)}</td>
+                    <td>${row.porcentaje.toFixed(2)}%</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function createChart() {
+            const ctx = document.getElementById('barChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(row => row.cuenta),
+                    datasets: [{
+                        label: 'Saldo',
+                        data: data.map(row => row.saldo),
+                        backgroundColor: 'rgb(129, 41, 41)',
+                        borderColor: 'rgb(129, 41, 41)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#000'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#000'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#000'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function cerrarSesion() {
+            alert('Sesión cerrada');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateTable();
+            createChart();
+        });
+    </script>
+</body>
+</html>

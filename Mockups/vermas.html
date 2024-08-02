@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+    <style>
+        .container {
+            display: flex;
+            background-color: rgb(129, 41, 41);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .product-images {
+            width: 40%;
+        }
+        .main-image {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .product-info {
+            width: 60%;
+            padding-left: 20px;
+        }
+        .product-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+        }
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+        }
+        .discount {
+            color: rgb(251, 255, 0);
+            font-weight: bold;
+        }
+        .login-form {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 30px;
+            border: 1px solid rgb(2, 1, 1);
+            border-radius: 10px;
+        }
+        .lolo {
+            background-color: rgb(129, 41, 41);
+        }
+    </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg lolo ">
+    <div class="container-fluid">
+      <a class="navbar-brand text-white  " href="inicio.html">CDMI</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link text-white " href="producto.html">Productos <i class="bi bi-box2-heart"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " href="donaciones.html">Donaciones <i class="bi bi-coin"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active text-white " aria-current="page" href="marketing.html">Eventos <i class="bi bi-calendar2-check"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " href="miscompras.html">Mis compras <i class="bi bi-bag-check"></i></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " href="carrito.html">Carrito <i class="bi bi-cart4"></i></a>
+          </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+</nav>
+
+    <div class="login-form shadow text-center lolo">
+        <div class="container">
+            <div class="product-images">
+                <img src="img/indigena 5.jpg" alt="" class="main-image">
+            </div>
+            <div class="product-info">
+                <h1 class="product-title text-light">Manilla tejida a hilo</h1>
+                <p><span class="discount">-38%</span> <span class="original-price">$6.999</span></p>
+                <p class="price text-light">$4.350</p>
+                <p class="text-light">Llévalo, son artesanias 100% originales.</p>
+                <button class="btn btn-outline-light btn-lg mt-3">Agregar al carrito</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
