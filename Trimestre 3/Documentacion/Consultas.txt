@@ -1,0 +1,86 @@
+--Consulta para obtener todas las donaciones realizadas por un administrador específico--
+SELECT * FROM donaciones WHERE ID_Administrador = 1;
+
+--Consulta para obtener todos los eventos programados para una fecha específica--
+SELECT * FROM eventos WHERE Cronograma = '2024-07-10';
+
+--Consulta para obtener el total de donaciones realizadas por cada administrador--
+SELECT ID_Administrador, SUM(Valor_Monto) as Total_Donaciones
+FROM donaciones
+GROUP BY ID_Administrador;
+
+--Consulta para obtener el total de donaciones por cada usuario, ordenado de mayor a menor--
+SELECT u.Nombre_Usuario, u.Apellido_Usuario, SUM(d.Valor_Monto) as Total_Donaciones
+FROM usuario u
+JOIN donaciones d ON u.ID_Usuario = d.ID_Usuario
+GROUP BY u.ID_Usuario
+ORDER BY Total_Donaciones DESC;
+
+--Consulta para obtener los usuarios que han realizado compras de productos de una categoría específica--
+SELECT DISTINCT u.Nombre_Usuario, u.Apellido_Usuario
+FROM usuario u
+JOIN ventas v ON u.ID_Usuario = v.ID_Usuario
+JOIN producto p ON v.ID_Producto = p.ID_Producto
+WHERE p.Categoria_Producto = 'Accesorios';
+
+--Consulta para obtener los detalles de envíos que contienen productos con características específicas--
+SELECT e.ID_Envio, e.Nombre_Envio, p.Caracteristicas_Producto
+FROM envio e
+JOIN producto p ON e.ID_Producto = p.ID_Producto
+WHERE p.Caracteristicas_Producto LIKE '%cuero negro%';
+
+--Consulta para obtener el aforo total de eventos por cada administrador--
+SELECT a.Nombre_Administrador, a.Apellido_Administrador, SUM(e.Aforo) as Total_Aforo
+FROM administrador a
+JOIN eventos e ON a.ID_Administrador = e.ID_Administrador
+GROUP BY a.ID_Administrador;
+
+--Consulta para obtener los eventos en los que la cantidad de asistentes superó un determinado número--
+SELECT e.ID_Evento, e.Cronograma, e.Aforo
+FROM eventos e
+WHERE e.Aforo > 50;
+
+--Consulta para obtener los usuarios que han asistido a todos los eventos--
+SELECT u.Nombre_Usuario, u.Apellido_Usuario
+FROM usuario u
+WHERE NOT EXISTS (
+    SELECT e.ID_Evento
+    FROM eventos e
+    WHERE NOT EXISTS (
+        SELECT re.ID_Usuario
+        FROM registroevento re
+        WHERE re.ID_Evento = e.ID_Evento AND re.ID_Usuario = u.ID_Usuario
+    )
+);
+
+--Consulta para obtener el producto más vendido--
+SELECT p.ID_Producto, SUM(v.Cantidad_Producto) as Total_Vendido
+FROM producto p
+JOIN ventas v ON p.ID_Producto = v.ID_Producto
+GROUP BY p.ID_Producto
+ORDER BY Total_Vendido DESC
+LIMIT 1;
+
+----------------------------------------------CONSULTAS JOIN--------------------------------------------------
+
+--Consulta que une las tablas envio y producto para mostrar los detalles de los envíos y los productos enviados--
+SELECT e.ID_Envio, e.Nombre_Envio, p.Nombre_Producto, p.Categoria_Producto
+FROM envio e
+LEFT JOIN producto p ON e.ID_Producto = p.ID_Producto;
+
+--Consulta que une las tablas usuario y ventas para mostrar las ventas realizadas por cada usuario--
+SELECT u.Nombre_Usuario, u.Apellido_Usuario, v.ID_Venta, v.Cantidad_Producto
+FROM usuario u
+INNER JOIN ventas v ON u.ID_Usuario = v.ID_Usuario;
+
+--Consulta que une las tablas producto y ventas para mostrar los productos vendidos junto con la cantidad vendida--
+SELECT p.Nombre_Producto, p.Categoria_Producto, v.Cantidad_Producto
+FROM producto p
+INNER JOIN ventas v ON p.ID_Producto = v.ID_Producto;
+
+--Consulta que une las tablas registroevento, eventos y usuario para mostrar los usuarios registrados en cada evento--
+SELECT re.ID_Registro_Evento, e.Cronograma, u.Nombre_Usuario, u.Apellido_Usuario
+FROM registroevento re
+INNER JOIN eventos e ON re.ID_Evento = e.ID_Evento
+INNER JOIN usuario u ON re.ID_Usuario = u.ID_Usuario;
+
