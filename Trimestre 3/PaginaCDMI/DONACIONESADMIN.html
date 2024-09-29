@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+            <html lang="es">
+
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Proyecto CDMI</title>
+                <link rel="stylesheet"
+                    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+                <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+                <style>
+                    body {
+                        background-color: #f4f1ea;
+                        /* Fondo claro y cálido */
+                        font-family: 'Roboto Condensed', sans-serif;
+                        color: #333;
+                        /* Texto oscuro para contraste */
+                    }
+
+                    .sidebar {
+                        width: 200px;
+                        background-color: rgb(129, 41, 41);
+                        border-right: 2px solid #d9c3b0;
+                        /* Detalle de borde */
+                        height: 100vh;
+                        padding-top: 20px;
+                        text-align: center;
+                    }
+
+                    .sidebar img {
+                        border-radius: 50%;
+                    }
+
+                    .sidebar a {
+                        color: #fff;
+                        text-decoration: none;
+                        transition: color 0.3s;
+                        font-size: 14px;
+                    }
+
+                    .sidebar a:hover {
+                        color: #ffdd57;
+                        /* Amarillo vibrante */
+                    }
+
+                    .content {
+                        flex-grow: 1;
+                        padding: 20px;
+                    }
+
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-bottom: 20px;
+                        background-color: #fff;
+                        color: #000;
+                    }
+
+                    th,
+                    td {
+                        border: 1px solid #000;
+                        padding: 8px;
+                        text-align: right;
+                    }
+
+                    th {
+                        background-color: rgb(129, 41, 41);
+                        color: #fff;
+                    }
+
+                    .chart {
+                        margin-top: 20px;
+                        background-color: #fff;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    }
+
+                    .close-session {
+                        text-decoration: underline;
+                        cursor: pointer;
+                        color: #ffdd57;
+                        /* Amarillo vibrante */
+                    }
+
+                    .nav-link {
+                        margin: 5px 0;
+                        padding: 8px;
+                        border-radius: 5px;
+                        transition: background-color 0.3s;
+                    }
+
+                    .nav-link:hover {
+                        background-color: rgb(194, 86, 86);
+                    }
+                </style>
+            </head>
+
+            <body>
+                <div class="d-flex">
+                    <div class="sidebar text-center p-3">
+                        <img src="img/logocdmi.png" width="70" alt="CDMI Logo" class="header-logo">
+                        <h5 class="text-light">CDMI</h5>
+                        <p class="text-light mb-4">Administrador</p>
+                        <a href="logout.php" class="close-session" onclick="cerrarSesion()">Cerrar sesión</a>
+                        <hr class="bg-light">
+                        <nav class="nav flex-column">
+                            <a class="nav-link text-white" href="ventas.html">Ventas</a>
+                            <a class="nav-link text-white" href="PRODUCTOSADMIN.php">Productos</a>
+                            <a class="nav-link text-white" href="DONACIONESADMIN.html">Donaciones</a>
+                            <a class="nav-link text-white" href="EVENTOSADMIN.html">Eventos</a>
+                        </nav>
+                    </div>
+                    <div class="content">
+                        <h1 class="lolo">Donaciones</h1>
+                        <table id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Cuenta</th>
+                                    <th>Debe</th>
+                                    <th>Haber</th>
+                                    <th>Saldo</th>
+                                    <th>Porcentaje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Los datos se insertarán aquí con JavaScript -->
+                            </tbody>
+                        </table>
+                        <div class="chart">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script>
+                    const data = [
+                        { fecha: '01/01/2023', cuenta: 'Ingreso anual', debe: 0, haber: 1994.64, saldo: 1994.64, porcentaje: 2.63 },
+                        { fecha: '01/02/2023', cuenta: 'Donación', debe: 1912.00, haber: 0, saldo: 3907.43, porcentaje: 5.15 },
+                        { fecha: '01/03/2023', cuenta: 'Venta', debe: 0, haber: 2500.00, saldo: 6407.43, porcentaje: 8.45 },
+                        { fecha: '01/04/2023', cuenta: 'Gasto', debe: 1000.00, haber: 0, saldo: 5407.43, porcentaje: 7.13 },
+                    ];
+
+                    function populateTable() {
+                        const tbody = document.querySelector('#dataTable tbody');
+                        data.forEach(row => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                    <td>${row.fecha}</td>
+                    <td>${row.cuenta}</td>
+                    <td>${row.debe.toFixed(2)}</td>
+                    <td>${row.haber.toFixed(2)}</td>
+                    <td>${row.saldo.toFixed(2)}</td>
+                    <td>${row.porcentaje.toFixed(2)}%</td>
+                `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+
+                    function createChart() {
+                        const ctx = document.getElementById('barChart').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: data.map(row => row.cuenta),
+                                datasets: [{
+                                    label: 'Saldo',
+                                    data: data.map(row => row.saldo),
+                                    backgroundColor: 'rgb(129, 41, 41)',
+                                    borderColor: 'rgb(129, 41, 41)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            color: '#000'
+                                        },
+                                        grid: {
+                                            color: 'rgba(0, 0, 0, 0.1)'
+                                        }
+                                    },
+                                    x: {
+                                        ticks: {
+                                            color: '#000'
+                                        },
+                                        grid: {
+                                            color: 'rgba(0, 0, 0, 0.1)'
+                                        }
+                                    }
+                                },
+                                plugins: {
+                                    legend: {
+                                        labels: {
+                                            color: '#000'
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    function cerrarSesion() {
+                        alert('Sesión cerrada');
+                    }
+
+                    document.addEventListener('DOMContentLoaded', () => {
+                        populateTable();
+                        createChart();
+                    });
+                </script>
+            </body>
+
+            </html>

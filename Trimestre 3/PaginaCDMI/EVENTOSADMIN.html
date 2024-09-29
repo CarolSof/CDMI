@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f1ea;
+            /* Fondo claro y cálido */
+            font-family: 'Roboto Condensed', sans-serif;
+            color: #333;
+            /* Texto oscuro para contraste */
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: rgb(129, 41, 41);
+            border-right: 2px solid #d9c3b0;
+            /* Detalle de borde */
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        .sidebar img {
+            border-radius: 50%;
+        }
+
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover {
+            color: #ffdd57;
+            /* Amarillo vibrante */
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .image-item {
+            text-align: center;
+            margin: 10px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 200px;
+        }
+
+        .image-item img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .image-item p {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .close-session {
+            text-decoration: underline;
+            cursor: pointer;
+            color: #ffdd57;
+            /* Amarillo vibrante */
+        }
+
+        .nav-link {
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: rgb(194, 86, 86)
+        }
+
+        .header-logo {
+            margin-bottom: 15px;
+        }
+
+        .event-card {
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #ccc;
+            padding: 15px;
+            width: calc(50% - 10px);
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .event-details {
+            margin-bottom: 10px;
+        }
+
+        .calendar,
+        .map {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .calendar {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+        }
+
+        .map {
+            background-color: #e0e0e0;
+            border: 1px solid #ddd;
+            height: 100px;
+        }
+
+        .description {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .add-button {
+            background-color: #a11414;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1.2em;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .add-button:hover {
+            background-color: #b12c2c;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="d-flex">
+        <div class="sidebar vh-100 text-center p-3">
+            <img src="img/logocdmi.png" width="70" alt="CDMI Logo" class="header-logo">
+            <h5 class="text-light">CDMI</h5>
+            <p class="text-light mb-4">Administrador</p>
+            <a href="logout.php" class="close-session" onclick="cerrarSesion()">Cerrar sesión</a>
+            <hr class="bg-light">
+            <nav class="nav flex-column">
+                <a class="nav-link text-white" href="ventas.html">Ventas</a>
+                <a class="nav-link text-white" href="PRODUCTOSADMIN.php">Productos</a>
+                <a class="nav-link text-white" href="DONACIONESADMIN.html">Donaciones</a>
+                <a class="nav-link text-white" href="EVENTOSADMIN.html">Eventos</a>
+            </nav>
+        </div>
+
+        <div class="content">
+            <h1>Eventos</h1>
+            <div class="row row-cols-2 g-3">
+                <div class="event-cards" id="eventos-container">
+                    <!-- Los eventos se cargarán dinámicamente aquí -->
+                </div>
+            </div>
+            <button class="add-button" onclick="agregarEvento()">+</button>
+        </div>
+    </div>
+
+    <script>
+        // Datos de ejemplo para eventos
+        let eventos = [
+            { id: 1, fecha: "25 Octubre", hora: "10:30", ubicacion: "Bogotá", descripcion: "Evento cultural sobre tradiciones indígenas." }
+        ];
+
+        // Función para cargar eventos
+        function cargarEventos() {
+            const container = document.getElementById('eventos-container');
+            container.innerHTML = '';
+            eventos.forEach(evento => {
+                container.innerHTML += `
+                <div class="event-card">
+                    <div class="event-details">
+                        <div class="calendar">${evento.fecha}</div>
+                        <div class="time">Hora: ${evento.hora}</div>
+                        <div class="map">${evento.ubicacion}</div>
+                        <div class="description">${evento.descripcion}</div>
+                    </div>
+                    <div class="buttons">
+                        <button onclick="verEvento(${evento.id})" class="btn btn-outline-dark btn-lg mt-3">OK</button>
+                        <button onclick="editarEvento(${evento.id})" class="btn btn-outline-dark btn-lg mt-3">Editar</button>
+                    </div>
+                </div>
+            `;
+            });
+        }
+
+        // Función para agregar un nuevo evento
+        function agregarEvento() {
+            const nuevaFecha = prompt("Ingrese la fecha del evento (ej. Octubre 2024):");
+            const nuevaHora = prompt("Ingrese la hora del evento (ej. 15:30):");
+            const nuevaUbicacion = prompt("Ingrese la ubicación del evento:");
+            const nuevaDescripcion = prompt("Ingrese una descripción para el evento:");
+            if (nuevaFecha && nuevaHora && nuevaUbicacion && nuevaDescripcion) {
+                const nuevoId = eventos.length + 1;
+                eventos.push({ id: nuevoId, fecha: nuevaFecha, hora: nuevaHora, ubicacion: nuevaUbicacion, descripcion: nuevaDescripcion });
+                cargarEventos();
+            }
+        }
+
+        // Función para ver detalles de un evento
+        function verEvento(id) {
+            const evento = eventos.find(e => e.id === id);
+            alert(`Detalles del evento:\nFecha: ${evento.fecha}\nHora: ${evento.hora}\nUbicación: ${evento.ubicacion}\nDescripción: ${evento.descripcion}`);
+        }
+
+        // Función para editar un evento
+        function editarEvento(id) {
+            const evento = eventos.find(e => e.id === id);
+            const nuevaFecha = prompt("Ingrese la nueva fecha del evento:", evento.fecha);
+            const nuevaHora = prompt("Ingrese la nueva hora del evento:", evento.hora);
+            const nuevaUbicacion = prompt("Ingrese la nueva ubicación del evento:", evento.ubicacion);
+            const nuevaDescripcion = prompt("Ingrese la nueva descripción del evento:", evento.descripcion);
+            if (nuevaFecha && nuevaHora && nuevaUbicacion && nuevaDescripcion) {
+                evento.fecha = nuevaFecha;
+                evento.hora = nuevaHora;
+                evento.ubicacion = nuevaUbicacion;
+                evento.descripcion = nuevaDescripcion;
+                cargarEventos();
+            }
+        }
+
+        // Cargar eventos al iniciar la página
+        window.onload = cargarEventos;
+    </script>
+</body>
+
+</html>
